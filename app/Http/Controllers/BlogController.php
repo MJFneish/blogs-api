@@ -21,7 +21,7 @@ class BlogController extends Controller
 
     public function index(Request $request) {
 //        return BlogResource::collection(Blog::all());
-        return new BlogCollection(Blog::where('id', '>', $request->first_id ?: 0)->paginate($request->per_page));
+        return new BlogCollection(Blog::where('id', '>', $request->firstId ?: 0)->paginate($request->per_page));
     }
 
     public function show(Blog $blog) {
@@ -53,6 +53,6 @@ class BlogController extends Controller
     public function destroy(Blog $blog)
     {
         $blog->delete();
-        return response()->json("record deleted");
+        return response()->json(['message' => "record deleted"]);
     }
 }
