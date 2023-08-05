@@ -14,18 +14,18 @@ use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
-    public function index() {
-        return BlogResource::collection(Blog::all());
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['index', 'show']]);
     }
 
-    public function  all(BlogGetUserBlogRequest $request){
-        return new BlogCollection(Blog::paginate(10));
+    public function index(Request $request) {
+//        return BlogResource::collection(Blog::all());
+        return new BlogCollection(Blog::where('id', '>', $request->first_id ?: 0)->paginate($request->per_page));
     }
+
     public function show(Blog $blog) {
-//        if(Auth::check())
-            return new BlogResource($blog);
-//        else
-//            return response()->json(['message'=> 'authentication required']);
+        return new BlogResource($blog);
     }
 
     public function store(BlogStoreRequest $request)
